@@ -85,8 +85,6 @@ def combine(stasis_keys, author_to_lines=author_to_lines):
     seen_lines = set()
     for citation in author_to_lines:
         for stasis_key in stasis_keys:
-            if len(stasis_key) == 1 and stasis_key != '*':
-                stasis_key = int(stasis_key)
             if stasis_key in author_to_lines[citation]:
                 for line_no, content in author_to_lines[citation][stasis_key].items():
                     if line_no not in seen_lines:
