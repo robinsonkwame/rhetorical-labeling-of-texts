@@ -45,7 +45,7 @@ STASIS = {
     2: "L_DEFINITION",
     3: "CAUSAL",
     4: "VALUE",
-    5: "POLICY",    
+    5: "POLICY",
     '01': INTERPRETIVE_STASIS[1],
     '02': INTERPRETIVE_STASIS[2],
     '03': INTERPRETIVE_STASIS[3],
@@ -77,22 +77,30 @@ def print_all(arg):
 
 def combine(stasis_keys, author_to_lines=author_to_lines):
     # cast from str to int for situational stasis (i know bad code smell)
+
+    file_label = '_'.join(stasis_keys)
+
     stasis_keys = [
         STASIS.get(a_key) or STASIS.get(int(a_key)) \
             for a_key in stasis_keys
     ]
 
     seen_lines = set()
-    for citation in author_to_lines:
-        for stasis_key in stasis_keys:
-            if stasis_key in author_to_lines[citation]:
-                for line_no, content in author_to_lines[citation][stasis_key].items():
-                    if line_no not in seen_lines:
-                        print(
-                            f"\n{citation} #{line_no}"
-                            f"\n\t{content}"
-                        )
-                        seen_lines.add(line_no)
+    with open(f"combine-{file_label}.txt",'w') as output:
+        for citation in author_to_lines:
+            for stasis_key in stasis_keys:
+                if stasis_key in author_to_lines[citation]:
+                    for line_no, content in author_to_lines[citation][stasis_key].items():
+                        if line_no not in seen_lines:
+                            print_string =\
+                                f"\n{citation} #{line_no}" +\
+                                f"\n\t{content}"
+                            print(print_string)
+                            output.write(
+                                print_string
+                            )
+                            seen_lines.add(line_no)
+
 
 OPTIONS = {
     1: list_all_of,
