@@ -1,4 +1,5 @@
 import pickle
+from pathlib import Path
 import json
 import os
 from label_stases import (get_interpretive_stasis, get_legal_stasis)
@@ -8,15 +9,27 @@ SOURCE_DIRECTORY = "" # "collective and peer production"
 AUTHOR = "0LGO24_author_to_lines.pkl"
 STASIS = "0LGO24_stasis_to_lines.pkl"
 
-author_to_lines = None
-with open(os.path.join(SOURCE_DIRECTORY, AUTHOR), 'rb') as handle:
-    author_to_lines =\
-        pickle.load(handle)
+# TODO: make Path interation over *_author_*.pkl and stasis
 
+author_to_lines = None
 stasis_to_lines = None
-with open(os.path.join(SOURCE_DIRECTORY, STASIS), 'rb') as handle:
-    stasis_to_lines =\
-        pickle.load(handle)
+
+def load_files_of(template="*_author*.pkl"):
+    add_to = dict()
+    for author_filename in Path(SOURCE_DIRECTORY).glob(template):
+        #import pdb; pdb.set_trace()
+        with open(os.path.join(author_filename), 'rb') as handle:
+            loaded_dict =\
+                pickle.load(handle)
+            add_to.update(loaded_dict)
+            print(f"\t setting with {author_filename}")
+    return add_to
+
+author_to_lines = load_files_of(template="*_author*.pkl")
+stasis_to_lines = load_files_of(template="*_stasis*.pkl")
+
+assert author_to_lines is not None
+assert stasis_to_lines is not None
 
 INTERPRETIVE_STASIS = {
     1: "SPIRIT OR LETTER",
