@@ -52,7 +52,7 @@ def make_author(content, line_no, citation, stasis):
 
 def make_notable(content, line_no, citation, stasis):
     # essentially making the author "*" or notable
-    author_to_lines[stasis][citation][line_no] = content
+    author_to_lines['*'][citation][line_no] = content
 
 # should be a util function
 def get_interpretive_stasis(a_combined_stasis):

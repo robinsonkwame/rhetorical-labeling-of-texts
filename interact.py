@@ -75,12 +75,31 @@ def print_all(arg):
         )
     )
 
-def list_authors():
-    pass
+def combine(stasis_keys, author_to_lines=author_to_lines):
+    # cast from str to int for situational stasis (i know bad code smell)
+    stasis_keys = [
+        STASIS.get(a_key) or STASIS.get(int(a_key)) \
+            for a_key in stasis_keys
+    ]
+
+    seen_lines = set()
+    for citation in author_to_lines:
+        for stasis_key in stasis_keys:
+            if len(stasis_key) == 1 and stasis_key != '*':
+                stasis_key = int(stasis_key)
+            if stasis_key in author_to_lines[citation]:
+                for line_no, content in author_to_lines[citation][stasis_key].items():
+                    if line_no not in seen_lines:
+                        print(
+                            f"\n{citation} #{line_no}"
+                            f"\n\t{content}"
+                        )
+                        seen_lines.add(line_no)
 
 OPTIONS = {
     1: list_all_of,
-    2: print_all
+    2: print_all,
+    3: combine
     # union of list_all_of (see we can combine statis, iterp stasis together)
 }
 
@@ -89,6 +108,7 @@ while True:
         "\noptions:"
         "\n\t 1: list all args: stasis (or anythign else to quit)"
         "\n\t 2: dump everything to screen"
+        "\n\t 3: print unique content from a list of stasis (denoting with 1 - 06)"
         "\n> "
     )
 
